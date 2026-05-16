@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GitHub Clone</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --gh-bg: #0d1117;
+      --gh-surface: #161b22;
+      --gh-border: #30363d;
+      --gh-text: #e6edf3;
+      --gh-muted: #7d8590;
+      --gh-green: #3fb950;
+      --gh-blue: #58a6ff;
+      --gh-orange: #f78166;
+      --gh-yellow: #d29922;
+      --gh-purple: #bc8cff;
+      --gh-btn-green: #238636;
+      --gh-btn-green-hover: #2ea043;
+      --gh-header-bg: #161b22;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--gh-bg);
+      color: var(--gh-text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* ===== NAVBAR ===== */
+    .gh-navbar {
+      background: var(--gh-header-bg);
+      border-bottom: 1px solid var(--gh-border);
+      padding: 12px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .gh-navbar .logo { color: #fff; font-size: 24px; text-decoration: none; }
+    .gh-navbar .logo:hover { color: #fff; }
+    .gh-search-bar {
+      background: var(--gh-bg);
+      border: 1px solid var(--gh-border);
+      border-radius: 6px;
+      color: var(--gh-text);
+      padding: 5px 12px;
+      font-size: 14px;
+      width: 280px;
+      outline: none;
+      transition: border 0.2s, width 0.3s;
+    }
+    .gh-search-bar:focus {
+      border-color: var(--gh-blue);
+      width: 320px;
+      background: var(--gh-surface);
+    }
+    .gh-search-bar::placeholder { color: var(--gh-muted); }
+    .nav-link-item {
+      color: var(--gh-text);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: background 0.15s;
+    }
+    .nav-link-item:hover { background: rgba(177,186,196,0.08); color: var(--gh-text); }
+    .gh-avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6e40c9, #3fb950);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 13px; color: #fff;
+      cursor: pointer; text-decoration: none;
+    }
+    .gh-btn-sm {
+      background: var(--gh-btn-green);
+      border: 1px solid rgba(240,246,252,0.1);
+      color: #fff; border-radius: 6px;
+      padding: 5px 12px; font-size: 13px;
+      font-weight: 600; cursor: pointer;
+      transition: background 0.15s;
+      text-decoration: none; display: inline-flex;
+      align-items: center; gap: 4px;
+    }
+    .gh-btn-sm:hover { background: var(--gh-btn-green-hover); color: #fff; }
+
+    /* ===== SIDEBAR ===== */
+    .gh-sidebar { padding: 24px 0; }
+    .profile-avatar {
+      width: 260px; height: 260px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6e40c9 0%, #3fb950 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 96px; color: #fff;
+      margin: 0 auto 16px;
+      border: 4px solid var(--gh-border);
+    }
+    .profile-name { font-size: 24px; font-weight: 700; color: var(--gh-text); }
+    .profile-username { font-size: 20px; color: var(--gh-muted); font-weight: 300; margin-top: 2px; }
+    .profile-bio { color: var(--gh-text); margin: 12px 0; font-size: 14px; }
+    .gh-follow-btn {
+      width: 100%; padding: 6px 16px;
+      background: var(--gh-surface);
+      border: 1px solid var(--gh-border);
+      color: var(--gh-text);
+      border-radius: 6px; font-size: 14px;
+      font-weight: 600; cursor: pointer;
+      transition: background 0.15s, border 0.15s;
+    }
+    .gh-follow-btn:hover { background: rgba(177,186,196,0.12); border-color: var(--gh-blue); }
+    .profile-stats { color: var(--gh-muted); font-size: 14px; }
+    .profile-stats a { color: var(--gh-text); font-weight: 600; text-decoration: none; }
+    .profile-stats a:hover { color: var(--gh-blue); }
+    .profile-meta-item { color: var(--gh-muted); font-size: 14px; margin: 6px 0; }
+    .profile-meta-item a { color: var(--gh-blue); text-decoration: none; }
+    .profile-meta-item a:hover { text-decoration: underline; }
+
+    /* ===== CONTRIBUTION GRAPH ===== */
+    .contrib-graph {
+      background: var(--gh-surface);
+      border: 1px solid var(--gh-border);
+      border-radius: 6px; padding: 16px;
+      margin-bottom: 16px;
+    }
+    .contrib-grid {
+      display: grid;
+      grid-template-columns: repeat(53, 12px);
+      grid-template-rows: repeat(7, 12px);
+      gap: 2px;
+    }
+    .contrib-cell {
+      width: 11px; height: 11px;
+      border-radius: 2px;
+      background: var(--gh-border);
+    }
+    .contrib-0 { background: #161b22; border: 1px solid rgba(255,255,255,0.05); }
+    .contrib-1 { background: #0e4429; }
+    .contrib-2 { background: #006d32; }
+    .contrib-3 { background: #26a641; }
+    .contrib-4 { background: #39d353; }
+
+    /* ===== TABS ===== */
+    .gh-tabs {
+      border-bottom: 1px solid var(--gh-border);
+      margin-bottom: 16px;
+    }
+    .gh-tab {
+      color: var(--gh-muted);
+      padding: 8px 16px;
+      font-size: 14px; font-weight: 600;
+      text-decoration: none;
+      border: none; background: none;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: color 0.15s;
+    }
+    .gh-tab:hover { color: var(--gh-text); }
+    .gh-tab.active {
+      color: var(--gh-text);
+      border-bottom-color: #f78166;
+    }
+    .gh-tab .badge {
+      background: rgba(177,186,196,0.15);
+      color: var(--gh-text);
+      border-radius: 20px;
+      padding: 0 6px; font-size: 11px;
+      font-weight: 600;
+    }
+
+    /* ===== REPO CARDS ===== */
+    .repo-card {
+      border: 1px solid var(--gh-border);
+      border-radius: 6px;
+      padding: 16px;
+      margin-bottom: 16px;
+      background: var(--gh-bg);
+      transition: border-color 0.15s;
+    }
+    .repo-card:hover { border-color: var(--gh-blue); }
+    .repo-name {
+      font-size: 16px; font-weight: 600;
+      color: var(--gh-blue);
+      text-decoration: none;
+    }
+    .repo-name:hover { text-decoration: underline; }
+    .repo-badge {
+      border: 1px solid var(--gh-border);
+      color: var(--gh-muted);
+      border-radius: 20px;
+      padding: 1px 7px;
+      font-size: 11px; font-weight: 600;
+    }
+    .repo-desc { color: var(--gh-muted); font-size: 13px; margin: 8px 0; }
+    .repo-meta { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .repo-meta-item { color: var(--gh-muted); font-size: 12px; display: flex; align-items: center; gap: 4px; }
+    .lang-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+
+    /* ===== PINNED ===== */
+    .section-title {
+      font-size: 16px; font-weight: 600;
+      margin-bottom: 12px; color: var(--gh-text);
+    }
+    .pinned-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .pinned-card {
+      border: 1px solid var(--gh-border);
+      border-radius: 6px; padding: 16px;
+      background: var(--gh-bg);
+      transition: border-color 0.15s;
+    }
+    .pinned-card:hover { border-color: var(--gh-blue); }
+
+    /* ===== FOOTER ===== */
+    .gh-footer {
+      border-top: 1px solid var(--gh-border);
+      padding: 40px 16px;
+      text-align: center;
+      color: var(--gh-muted);
+      font-size: 12px;
+    }
+    .gh-footer a { color: var(--gh-muted); text-decoration: none; margin: 0 8px; }
+    .gh-footer a:hover { color: var(--gh-blue); }
+
+    /* ===== MISC ===== */
+    @media (max-width: 768px) {
+      .profile-avatar { width: 80px; height: 80px; font-size: 32px; }
+      .gh-search-bar { width: 180px; }
+      .pinned-grid { grid-template-columns: 1fr; }
+      .contrib-grid { grid-template-columns: repeat(26, 12px); }
+    }
+
+    .notification-dot {
+      position: absolute; top: -3px; right: -3px;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--gh-blue);
+      border: 2px solid var(--gh-header-bg);
+    }
+
+    .dropdown-gh {
+      position: relative; display: inline-block;
+    }
+    .dropdown-gh .dropdown-menu-gh {
+      display: none;
+      position: absolute; top: 100%; right: 0;
+      background: var(--gh-surface);
+      border: 1px solid var(--gh-border);
+      border-radius: 6px; min-width: 180px;
+      padding: 4px 0; z-index: 999;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+    .dropdown-gh:hover .dropdown-menu-gh { display: block; }
+    .dropdown-menu-gh a {
+      display: block; padding: 8px 16px;
+      color: var(--gh-text); text-decoration: none;
+      font-size: 13px;
+    }
+    .dropdown-menu-gh a:hover { background: rgba(177,186,196,0.08); }
+    .dropdown-menu-gh hr { border-color: var(--gh-border); margin: 4px 0; }
+  </style>
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="gh-navbar">
+  <div class="container-fluid">
+    <div class="d-flex align-items-center gap-3">
+      <!-- Logo -->
+      <a href="#" class="logo">
+        <i class="fa-brands fa-github"></i>
+      </a>
+
+      <!-- Search -->
+      <input type="text" class="gh-search-bar d-none d-md-block" placeholder="Search or jump to..."/>
+
+      <!-- Nav Links -->
+      <div class="d-none d-lg-flex align-items-center gap-1 ms-2">
+        <a href="#" class="nav-link-item">Pull requests</a>
+        <a href="#" class="nav-link-item">Issues</a>
+        <a href="#" class="nav-link-item">Codespaces</a>
+        <a href="#" class="nav-link-item">Marketplace</a>
+        <a href="#" class="nav-link-item">Explore</a>
+      </div>
+
+      <!-- Right side -->
+      <div class="d-flex align-items-center gap-2 ms-auto">
+        <!-- Notification bell -->
+        <div class="position-relative">
+          <a href="#" class="nav-link-item" style="font-size:16px; padding:4px 6px;">
+            <i class="fa-solid fa-bell"></i>
+          </a>
+          <span class="notification-dot"></span>
+        </div>
+
+        <!-- New repo button -->
+        <a href="#" class="gh-btn-sm d-none d-sm-inline-flex">
+          <i class="fa-solid fa-plus"></i>
+          <i class="fa-solid fa-chevron-down" style="font-size:10px;"></i>
+        </a>
+
+        <!-- Avatar dropdown -->
+        <div class="dropdown-gh">
+          <div class="gh-avatar">JD</div>
+          <div class="dropdown-menu-gh">
+            <a href="#"><strong>Signed in as</strong><br/><span style="color:var(--gh-muted)">johndoe</span></a>
+            <hr/>
+            <a href="#"><i class="fa-solid fa-user me-2"></i>Your profile</a>
+            <a href="#"><i class="fa-solid fa-book me-2"></i>Your repositories</a>
+            <a href="#"><i class="fa-solid fa-codespace me-2"></i>Your codespaces</a>
+            <a href="#"><i class="fa-solid fa-star me-2"></i>Your stars</a>
+            <hr/>
+            <a href="#"><i class="fa-solid fa-gear me-2"></i>Settings</a>
+            <a href="#" style="color:var(--gh-orange)"><i class="fa-solid fa-right-from-bracket me-2"></i>Sign out</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== MAIN CONTENT ===== -->
+<div class="container-xl" style="max-width: 1280px; padding: 24px 16px;">
+  <div class="row g-4">
+
+    <!-- SIDEBAR -->
+    <aside class="col-12 col-md-3 gh-sidebar">
+      <div class="profile-avatar">
+        <i class="fa-solid fa-user"></i>
+      </div>
+      <div class="profile-name">John Doe</div>
+      <div class="profile-username">johndoe</div>
+      <div class="profile-bio">Full-stack developer. Open source enthusiast. Building cool stuff with code ☕</div>
+      <button class="gh-follow-btn mb-3">Follow</button>
+
+      <div class="profile-stats mb-3">
+        <i class="fa-solid fa-user-group me-1"></i>
+        <a href="#">420</a> followers &nbsp;·&nbsp;
+        <a href="#">186</a> following
+      </div>
+
+      <div class="profile-meta-item">
+        <i class="fa-solid fa-building me-2"></i>@OpenSourceOrg
+      </div>
+      <div class="profile-meta-item">
+        <i class="fa-solid fa-location-dot me-2"></i>Lahore, Pakistan
+      </div>
+      <div class="profile-meta-item">
+        <i class="fa-solid fa-link me-2"></i>
+        <a href="#">johndoe.dev</a>
+      </div>
+      <div class="profile-meta-item">
+        <i class="fa-brands fa-x-twitter me-2"></i>
+        <a href="#">@johndoe</a>
+      </div>
+
+      <hr style="border-color: var(--gh-border); margin: 16px 0;"/>
+      <div class="section-title" style="font-size:14px;">Organizations</div>
+      <div class="d-flex gap-2 flex-wrap">
+        <a href="#" title="ReactJS" style="width:32px;height:32px;border-radius:6px;background:linear-gradient(135deg,#61dafb,#20232a);display:flex;align-items:center;justify-content:center;color:#61dafb;text-decoration:none;font-size:16px;"><i class="fa-brands fa-react"></i></a>
+        <a href="#" title="NodeJS" style="width:32px;height:32px;border-radius:6px;background:linear-gradient(135deg,#3c873a,#1a1a1a);display:flex;align-items:center;justify-content:center;color:#3c873a;text-decoration:none;font-size:16px;"><i class="fa-brands fa-node-js"></i></a>
+        <a href="#" title="Python" style="width:32px;height:32px;border-radius:6px;background:linear-gradient(135deg,#3776ab,#ffd343);display:flex;align-items:center;justify-content:center;color:#ffd343;text-decoration:none;font-size:16px;"><i class="fa-brands fa-python"></i></a>
+      </div>
+    </aside>
+
+    <!-- MAIN AREA -->
+    <main class="col-12 col-md-9">
+
+      <!-- Tabs -->
+      <div class="gh-tabs d-flex flex-wrap">
+        <button class="gh-tab active" onclick="showTab('overview', this)">
+          <i class="fa-solid fa-book-open"></i> Overview
+        </button>
+        <button class="gh-tab" onclick="showTab('repos', this)">
+          <i class="fa-solid fa-book"></i> Repositories
+          <span class="badge">42</span>
+        </button>
+        <button class="gh-tab" onclick="showTab('projects', this)">
+          <i class="fa-solid fa-table-columns"></i> Projects
+          <span class="badge">3</span>
+        </button>
+        <button class="gh-tab" onclick="showTab('stars', this)">
+          <i class="fa-regular fa-star"></i> Stars
+          <span class="badge">186</span>
+        </button>
+      </div>
+
+      <!-- OVERVIEW TAB -->
+      <div id="tab-overview">
+        <!-- Pinned Repos -->
+        <div class="section-title">
+          <i class="fa-solid fa-thumbtack me-2" style="font-size:13px;"></i> Pinned
+        </div>
+        <div class="pinned-grid">
+          <!-- Pinned 1 -->
+          <div class="pinned-card">
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <i class="fa-solid fa-book" style="color:var(--gh-muted);"></i>
+              <a href="#" class="repo-name" style="font-size:14px;">awesome-portfolio</a>
+              <span class="repo-badge">Public</span>
+            </div>
+            <div class="repo-desc">A stunning developer portfolio template built with React & Tailwind CSS.</div>
+            <div class="repo-meta mt-2">
+              <span class="repo-meta-item"><span class="lang-dot" style="background:#61dafb;"></span> JavaScript</span>
+              <span class="repo-meta-item"><i class="fa-regular fa-star"></i> 234</span>
+              <span class="repo-meta-item"><i class="fa-solid fa-code-fork"></i> 45</span>
+            </div>
+          </div>
+          <!-- Pinned 2 -->
+          <div class="pinned-card">
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <i class="fa-solid fa-book" style="color:var(--gh-muted);"></i>
+              <a href="#" class="repo-name" style="font-size:14px;">node-express-api</a>
+              <span class="repo-badge">Public</span>
+            </div>
+            <div class="repo-desc">RESTful API boilerplate using Node.js, Express & MongoDB with JWT auth.</div>
+            <div class="repo-meta mt-2">
+              <span class="repo-meta-item"><span class="lang-dot" style="background:#3c873a;"></span> TypeScript</span>
+              <span class="repo-meta-item"><i class="fa-regular fa-star"></i> 189</span>
+              <span class="repo-meta-item"><i class="fa-solid fa-code-fork"></i> 32</span>
+            </div>
+          </div>
+          <!-- Pinned 3 -->
+          <div class="pinned-card">
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <i class="fa-solid fa-book" style="color:var(--gh-muted);"></i>
+              <a href="#" class="repo-name" style="font-size:14px;">ml-playground</a>
+              <span class="repo-badge">Public</span>
+            </div>
+            <div class="repo-desc">Machine learning experiments and notebooks using scikit-learn & PyTorch.</div>
+            <div class="repo-meta mt-2">
+              <span class="repo-meta-item"><span class="lang-dot" style="background:#3776ab;"></span> Python</span>
+              <span class="repo-meta-item"><i class="fa-regular fa-star"></i> 97</span>
+              <span class="repo-meta-item"><i class="fa-solid fa-code-fork"></i> 18</span>
+            </div>
+          </div>
+          <!-- Pinned 4 -->
+          <div class="pinned-card">
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <i class="fa-solid fa-book" style="color:var(--gh-muted);"></i>
+              <a href="#" class="repo-name" style="font-size:14px;">github-clone-ui</a>
+              <span class="repo-badge">Public</span>
+            </div>
+            <div class="repo-desc">A pixel-perfect GitHub UI clone made with HTML, CSS, Bootstrap & Font Awesome.</div>
+            <div class="repo-meta mt-2">
+              <span class="repo-meta-item"><span class="lang-dot" style="background:#e34c26;"></span> HTML</span>
+              <span class="repo-meta-item"><i class="fa-regular fa-star"></i> 311</span>
+              <span class="repo-meta-item"><i class="fa-solid fa-code-fork"></i> 56</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contribution Graph -->
+        <div class="section-title">
+          <span id="contrib-count">847</span> contributions in the last year
+        </div>
+        <div class="contrib-graph">
+          <div class="contrib-grid" id="contrib-grid"></div>
+          <div class="d-flex align-items-center justify-content-end gap-1 mt-2" style="font-size:11px;color:var(--gh-muted);">
+            Less
+            <span style="width:11px;height:11px;border-radius:2px;background:#161b22;border:1px solid rgba(255,255,255,0.05);display:inline-block;"></span>
+            <span style="width:11px;height:11px;border-radius:2px;background:#0e4429;display:inline-block;"></span>
+            <span style="width:11px;height:11px;border-radius:2px;background:#006d32;display:inline-block;"></span>
+            <span style="width:11px;height:11px;border-radius:2px;background:#26a641;display:inline-block;"></span>
+            <span style="width:11px;height:11px;border-radius:2px;background:#39d353;display:inline-block;"></span>
+            More
+          </div>
+        </div>
+      </div>
+
+      <!-- REPOSITORIES TAB -->
+      <div id="tab-repos" style="display:none;">
+        <!-- Search & filter bar -->
+        <div class="d-flex flex-wrap gap-2 mb-3 align-items-center">
+          <input type="text" class="gh-search-bar flex-grow-1" style="width:auto;" placeholder="Find a repository..."/>
+          <select class="gh-search-bar" style="width:auto;">
+            <option>Type: All</option>
+            <option>Public</option>
+            <option>Private</option>
+            <option>Forked</option>
+          </select>
+          <select class="gh-search-bar" style="width:auto;">
+            <option>Language: All</option>
+            <option>JavaScript</option>
+            <option>TypeScript</option>
+            <option>Python</option>
+            <option>HTML</option>
+          </select>
+          <a href="#" class="gh-btn-sm"><i class="fa-solid fa-plus me-1"></i>New</a>
+        </div>
+
+        <!-- Repo List -->
+        <div id="repo-list">
+          <div class="repo-card">
+            <div class="d-flex align-items-start justify-content-between flex-wrap gap-2">
+              <div>
+                <a href="#" class="repo-name">awesome-portfolio</a>
+                <span class="repo-badge ms-2">Public</span>
+              </div>
+              <button class="gh-follow-btn" style="width:auto; padding:3px 12px; font-size:12px;">
+                <i class="fa-regular fa-star me-1"></i> Star
+              </button>
+            </div>
+            <div class="repo-desc">A stunning developer portfolio template built with React & Tailwind CSS.</div>
+            <div class="repo-meta">
+              <span class="repo-meta-item"><span class="lang-dot" style="background:#f1e05a;"></span> JavaScript</span>
+              <span class="repo-meta-item"><i class="fa-regular fa-star"></i> 234</span>
+              <span class="repo-meta-item"><i class="fa-solid fa-code-fork"></i> 45</span>
+              <span class="repo-meta-item"><i class="fa-regular fa-clock"></i> Updated 2 days ago</span>
+            </div>
+          </div>
+
+          <div class="repo-card">
+            <div class="d-flex align-items-start justify-content-between flex-wrap gap-2">
+              <div>
+                <a href="#" class="repo-name">node-express-api</a>
+                <span class="repo-badge ms-2">Public</span>
+              </div>
+              <button class="gh-follow-btn" style="width:auto; padding:3px 12px; font-size:12px;">
+                <i class="fa-regular fa-star me-1"></i> Star
+              </button>
+            </div>
+            <div class="repo-desc">RESTful API boilerplate using Node.js, Express & MongoDB with JWT auth.</div>
+            <div class="repo-meta">
+              <span class="repo-meta-item"><span class="lang-dot" style="background:#2b7489;"></span> TypeScript</span>
+              <span class="repo-meta-item"><i class="fa-regular fa-star"></i> 189</span>
+              <span class="repo-meta-item"><i class="fa-solid fa-code-fork"></i> 32</span>
+              <span class="repo-meta-item"><i class="fa-regular fa-clock"></i> Updated 5 days ago</span>
+            </div>
+          </div>
+
+          <div class="repo-card">
+            <div class="d-flex align-items-start justify-content-between flex-wrap gap-2">
+              <div>
+                <a href="#" class="repo-name">ml-playground</a>
+                <span class="repo-badge ms-2">Public</span>
+              </div>
+              <button class="gh-follow-btn" style="width:auto; padding:3px 12px; font-size:12px;">
+                <i class="fa-regular fa-star me-1"></i> Star
+              </button>
+            </div>
+            <div class="repo-desc">Machine learning experiments and notebooks using scikit-learn & PyTorch.</div>
+            <div class="repo-meta">
+              <span class="repo-meta-item"><span class="lang-dot" style="background:#3572A5;"></span> Python</span>
+              <span class="repo-meta-item"><i class="fa-regular fa-star"></i> 97</span>
+              <span class="repo-meta-item"><i class="fa-solid fa-code-fork"></i> 18</span>
+              <span class="repo-meta-item"><i class="fa-regular fa-clock"></i> Updated 1 week ago</span>
+            </div>
+          </div>
+
+          <div class="repo-card">
+            <div class="d-flex align-items-start justify-content-between flex-wrap gap-2">
+              <div>
+                <a href="#" class="repo-name">github-clone-ui</a>
+                <span class="repo-badge ms-2">Public</span>
+              </div>
+              <button class="gh-follow-btn" style="width:auto; padding:3px 12px; font-size:12px;">
+                <i class="fa-regular fa-star me-1"></i> Star
+              </button>
+            </div>
+            <div class="repo-desc">A pixel-perfect GitHub UI clone made with HTML, CSS, Bootstrap & Font Awesome.</div>
+            <div class="repo-meta">
+              <span class="repo-meta-item"><span class="lang-dot" style="background:#e34c26;"></span> HTML</span>
+              <span class="repo-meta-item"><i class="fa-regular fa-star"></i> 311</span>
+              <span class="repo-meta-item"><i class="fa-solid fa-code-fork"></i> 56</span>
+              <span class="repo-meta-item"><i class="fa-regular fa-clock"></i> Updated 3 hours ago</span>
+            </div>
+          </div>
+
+          <div class="repo-card">
+            <div class="d-flex align-items-start justify-content-between flex-wrap gap-2">
+              <div>
+                <a href="#" class="repo-name">devblog</a>
+                <span class="repo-badge ms-2">Private</span>
+              </div>
+              <button class="gh-follow-btn" style="width:auto; padding:3px 12px; font-size:12px;">
+                <i class="fa-regular fa-star me-1"></i> Star
+              </button>
+            </div>
+            <div class="repo-desc">My personal developer blog built with Next.js and MDX.</div>
+            <div class="repo-meta">
+              <span class="repo-meta-item"><span class="lang-dot" style="background:#f1e05a;"></span> JavaScript</span>
+              <span class="repo-meta-item"><i class="fa-regular fa-star"></i> 12</span>
+              <span class="repo-meta-item"><i class="fa-solid fa-code-fork"></i> 4</span>
+              <span class="repo-meta-item"><i class="fa-regular fa-clock"></i> Updated 2 weeks ago</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROJECTS TAB -->
+      <div id="tab-projects" style="display:none;">
+        <div class="row g-3 mt-1">
+          <div class="col-12 col-sm-6">
+            <div class="repo-card h-100">
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <i class="fa-solid fa-table-columns" style="color:var(--gh-purple);"></i>
+                <a href="#" class="repo-name">Portfolio Redesign</a>
+              </div>
+              <div class="repo-desc mb-3">Redesigning personal portfolio with new branding and animations.</div>
+              <div class="d-flex gap-2 flex-wrap">
+                <span class="repo-meta-item"><i class="fa-solid fa-circle-check" style="color:var(--gh-green);"></i> 8 done</span>
+                <span class="repo-meta-item"><i class="fa-regular fa-circle" style="color:var(--gh-muted);"></i> 3 in progress</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6">
+            <div class="repo-card h-100">
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <i class="fa-solid fa-table-columns" style="color:var(--gh-blue);"></i>
+                <a href="#" class="repo-name">API v2 Launch</a>
+              </div>
+              <div class="repo-desc mb-3">Major API version update with new endpoints and GraphQL support.</div>
+              <div class="d-flex gap-2 flex-wrap">
+                <span class="repo-meta-item"><i class="fa-solid fa-circle-check" style="color:var(--gh-green);"></i> 12 done</span>
+                <span class="repo-meta-item"><i class="fa-regular fa-circle" style="color:var(--gh-muted);"></i> 7 in progress</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6">
+            <div class="repo-card h-100">
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <i class="fa-solid fa-table-columns" style="color:var(--gh-yellow);"></i>
+                <a href="#" class="repo-name">ML Research 2026</a>
+              </div>
+              <div class="repo-desc mb-3">Research project on transformer architectures and fine-tuning.</div>
+              <div class="d-flex gap-2 flex-wrap">
+                <span class="repo-meta-item"><i class="fa-solid fa-circle-check" style="color:var(--gh-green);"></i> 5 done</span>
+                <span class="repo-meta-item"><i class="fa-regular fa-circle" style="color:var(--gh-muted);"></i> 9 in progress</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STARS TAB -->
+      <div id="tab-stars" style="display:none;">
+        <div class="repo-card">
+          <div class="d-flex align-items-start justify-content-between flex-wrap gap-2">
+            <div>
+              <a href="#" class="repo-name">torvalds / linux</a>
+              <span class="repo-badge ms-2">Public</span>
+            </div>
+            <button class="gh-follow-btn" style="width:auto; padding:3px 12px; font-size:12px; color:var(--gh-yellow);">
+              <i class="fa-solid fa-star me-1"></i> Starred
+            </button>
+          </div>
+          <div class="repo-desc">Linux kernel source tree</div>
+          <div class="repo-meta">
+            <span class="repo-meta-item"><span class="lang-dot" style="background:#555555;"></span> C</span>
+            <span class="repo-meta-item"><i class="fa-regular fa-star"></i> 184k</span>
+          </div>
+        </div>
+        <div class="repo-card">
+          <div class="d-flex align-items-start justify-content-between flex-wrap gap-2">
+            <div>
+              <a href="#" class="repo-name">microsoft / vscode</a>
+              <span class="repo-badge ms-2">Public</span>
+            </div>
+            <button class="gh-follow-btn" style="width:auto; padding:3px 12px; font-size:12px; color:var(--gh-yellow);">
+              <i class="fa-solid fa-star me-1"></i> Starred
+            </button>
+          </div>
+          <div class="repo-desc">Visual Studio Code — open source editor by Microsoft</div>
+          <div class="repo-meta">
+            <span class="repo-meta-item"><span class="lang-dot" style="background:#2b7489;"></span> TypeScript</span>
+            <span class="repo-meta-item"><i class="fa-regular fa-star"></i> 162k</span>
+          </div>
+        </div>
+        <div class="repo-card">
+          <div class="d-flex align-items-start justify-content-between flex-wrap gap-2">
+            <div>
+              <a href="#" class="repo-name">facebook / react</a>
+              <span class="repo-badge ms-2">Public</span>
+            </div>
+            <button class="gh-follow-btn" style="width:auto; padding:3px 12px; font-size:12px; color:var(--gh-yellow);">
+              <i class="fa-solid fa-star me-1"></i> Starred
+            </button>
+          </div>
+          <div class="repo-desc">The library for web and native user interfaces</div>
+          <div class="repo-meta">
+            <span class="repo-meta-item"><span class="lang-dot" style="background:#f1e05a;"></span> JavaScript</span>
+            <span class="repo-meta-item"><i class="fa-regular fa-star"></i> 228k</span>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer class="gh-footer">
+  <div class="mb-2">
+    <i class="fa-brands fa-github me-2" style="font-size:18px;"></i>
+    <span style="color:var(--gh-muted);">© 2026 GitHub, Inc.</span>
+  </div>
+  <div>
+    <a href="#">Terms</a>
+    <a href="#">Privacy</a>
+    <a href="#">Security</a>
+    <a href="#">Status</a>
+    <a href="#">Docs</a>
+    <a href="#">Contact</a>
+    <a href="#">Manage cookies</a>
+    <a href="#">Do not share my personal information</a>
+  </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  // ===== TAB SWITCHING =====
+  function showTab(name, el) {
+    ['overview','repos','projects','stars'].forEach(t => {
+      document.getElementById('tab-' + t).style.display = 'none';
+    });
+    document.querySelectorAll('.gh-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + name).style.display = 'block';
+    el.classList.add('active');
+  }
+
+  // ===== CONTRIBUTION GRAPH GENERATOR =====
+  function generateContribGraph() {
+    const grid = document.getElementById('contrib-grid');
+    const levels = [0,0,0,1,1,2,2,3,4];
+    let total = 0;
+    for (let i = 0; i < 53 * 7; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'contrib-cell';
+      const rand = Math.random();
+      let level;
+      if (rand < 0.35) level = 0;
+      else if (rand < 0.55) level = 1;
+      else if (rand < 0.72) level = 2;
+      else if (rand < 0.88) level = 3;
+      else level = 4;
+      cell.classList.add('contrib-' + level);
+      if (level > 0) total += level * Math.ceil(Math.random() * 3);
+      cell.title = `${level * 2} contributions`;
+      grid.appendChild(cell);
+    }
+    document.getElementById('contrib-count').textContent = (700 + Math.floor(Math.random() * 300)).toLocaleString();
+  }
+
+  generateContribGraph();
+
+  // ===== STAR BUTTON TOGGLE =====
+  document.querySelectorAll('#tab-repos button').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const icon = this.querySelector('i');
+      if (icon.classList.contains('fa-regular')) {
+        icon.classList.replace('fa-regular','fa-solid');
+        this.style.color = 'var(--gh-yellow)';
+        this.style.borderColor = 'var(--gh-yellow)';
+      } else {
+        icon.classList.replace('fa-solid','fa-regular');
+        this.style.color = '';
+        this.style.borderColor = '';
+      }
+    });
+  });
+
+  // ===== FOLLOW BUTTON =====
+  const followBtn = document.querySelector('.gh-follow-btn');
+  if (followBtn) {
+    followBtn.addEventListener('click', function() {
+      if (this.textContent.trim() === 'Follow') {
+        this.textContent = 'Unfollow';
+        this.style.borderColor = 'var(--gh-blue)';
+        this.style.color = 'var(--gh-blue)';
+      } else {
+        this.textContent = 'Follow';
+        this.style.borderColor = '';
+        this.style.color = '';
+      }
+    });
+  }
+</script>
+</body>
+</html>
