@@ -16,11 +16,11 @@ if (isset($_POST['add_to_cart'])) {
 }
 
 $total = 0;
-
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
@@ -28,99 +28,268 @@ $total = 0;
 
 <title>MediCare Pharmacy</title>
 
-<!-- Bootstrap -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<!-- Font Awesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
 
 <style>
 
-body{
-    background:#f5f7fb;
-    font-family:Arial;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
+
+body{
+    background:#f4f7fb;
+    font-family:Arial, sans-serif;
+    overflow-x:hidden;
+}
+
+/* Navbar */
 
 .navbar{
     background:white;
-    box-shadow:0 2px 10px rgba(0,0,0,0.1);
+    padding:15px 0;
+    box-shadow:0 4px 20px rgba(0,0,0,0.08);
 }
 
 .logo{
-    font-size:30px;
+    font-size:32px;
     font-weight:bold;
     color:#0d6efd;
 }
 
 .logo span{
-    color:#00b894;
+    color:#00c896;
 }
 
+.nav-link{
+    font-weight:600;
+    color:#333 !important;
+    transition:0.3s;
+}
+
+.nav-link:hover{
+    color:#0d6efd !important;
+}
+
+.cart-btn{
+    position:relative;
+}
+
+.cart-count{
+    position:absolute;
+    top:-8px;
+    right:-8px;
+    background:red;
+    color:white;
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    font-size:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+/* Hero */
+
 .hero{
-    background:linear-gradient(to right,#0d6efd,#00b894);
-    padding:80px 0;
+    padding:100px 0;
+    background:linear-gradient(135deg,#0d6efd,#00c896);
     color:white;
 }
 
 .hero h1{
-    font-size:55px;
-    font-weight:bold;
+    font-size:65px;
+    font-weight:800;
+    line-height:1.2;
 }
+
+.hero p{
+    font-size:20px;
+    margin-top:20px;
+}
+
+.hero-btn{
+    background:white;
+    color:#0d6efd;
+    border:none;
+    padding:14px 35px;
+    border-radius:50px;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+.hero-btn:hover{
+    transform:translateY(-3px);
+    background:#f1f1f1;
+}
+
+.hero img{
+    border-radius:25px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.25);
+}
+
+/* Section */
+
+.section-title{
+    text-align:center;
+    font-size:40px;
+    font-weight:800;
+    margin:80px 0 40px;
+    color:#111827;
+}
+
+/* Product Card */
 
 .product-card{
     background:white;
-    border-radius:15px;
+    border-radius:25px;
     overflow:hidden;
-    transition:0.3s;
-    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+    transition:0.4s;
+    box-shadow:0 5px 20px rgba(0,0,0,0.08);
+    position:relative;
 }
 
 .product-card:hover{
-    transform:translateY(-10px);
+    transform:translateY(-12px);
+    box-shadow:0 15px 35px rgba(0,0,0,0.15);
 }
 
 .product-img{
-    height:220px;
+    height:240px;
+    width:100%;
     object-fit:cover;
+}
+
+.product-body{
+    padding:20px;
+}
+
+.badge-sale{
+    position:absolute;
+    top:15px;
+    left:15px;
+    background:#00c896;
+    color:white;
+    padding:6px 14px;
+    border-radius:50px;
+    font-size:13px;
+    font-weight:bold;
+}
+
+.product-title{
+    font-size:24px;
+    font-weight:700;
+    margin-top:10px;
 }
 
 .price{
     color:#0d6efd;
-    font-size:22px;
+    font-size:28px;
     font-weight:bold;
 }
 
-.section-title{
-    text-align:center;
-    margin:50px 0 30px;
+.add-btn{
+    background:linear-gradient(135deg,#0d6efd,#00c896);
+    border:none;
+    padding:12px;
+    border-radius:12px;
     font-weight:bold;
+    transition:0.3s;
+}
+
+.add-btn:hover{
+    transform:scale(1.03);
+}
+
+/* Cart */
+
+.offcanvas{
+    border-top-left-radius:25px;
+    border-bottom-left-radius:25px;
 }
 
 .cart-box{
-    background:white;
-    padding:20px;
+    background:#f8f9fc;
+    padding:18px;
     border-radius:15px;
-    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+    margin-bottom:15px;
 }
+
+.cart-box h5{
+    font-weight:700;
+}
+
+.total-box{
+    background:#0d6efd;
+    color:white;
+    padding:18px;
+    border-radius:15px;
+    text-align:center;
+    margin-top:20px;
+}
+
+/* Footer */
 
 .footer{
     background:#111827;
     color:white;
-    padding:30px 0;
-    margin-top:50px;
+    padding:60px 0 30px;
+    margin-top:80px;
 }
 
-.cart-count{
-    background:red;
-    color:white;
+.footer h3{
+    font-size:35px;
+    font-weight:bold;
+}
+
+.social-icons i{
+    width:50px;
+    height:50px;
     border-radius:50%;
-    padding:2px 8px;
-    font-size:12px;
+    background:#1f2937;
+    line-height:50px;
+    text-align:center;
+    margin:0 8px;
+    transition:0.3s;
+}
+
+.social-icons i:hover{
+    background:#0d6efd;
+    transform:translateY(-5px);
+}
+
+/* Responsive */
+
+@media(max-width:768px){
+
+.hero{
+    text-align:center;
+    padding:70px 0;
+}
+
+.hero h1{
+    font-size:42px;
+}
+
+.hero img{
+    margin-top:40px;
+}
+
+.section-title{
+    font-size:32px;
+}
+
 }
 
 </style>
 
 </head>
+
 <body>
 
 <!-- Navbar -->
@@ -129,12 +298,16 @@ body{
 
 <div class="container">
 
-<a class="navbar-brand logo" href="#">
-    Medi<span>Care</span>
+<a href="#" class="navbar-brand logo">
+Medi<span>Care</span>
 </a>
 
-<button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
-    <span class="navbar-toggler-icon"></span>
+<button class="navbar-toggler"
+data-bs-toggle="collapse"
+data-bs-target="#menu">
+
+<span class="navbar-toggler-icon"></span>
+
 </button>
 
 <div class="collapse navbar-collapse" id="menu">
@@ -142,26 +315,32 @@ body{
 <ul class="navbar-nav ms-auto align-items-center">
 
 <li class="nav-item mx-2">
-    <a href="#" class="nav-link">Home</a>
+<a href="#" class="nav-link">Home</a>
 </li>
 
 <li class="nav-item mx-2">
-    <a href="#" class="nav-link">Products</a>
+<a href="#" class="nav-link">Products</a>
 </li>
 
 <li class="nav-item mx-2">
-    <a href="#" class="nav-link">Contact</a>
+<a href="#" class="nav-link">About</a>
 </li>
 
 <li class="nav-item mx-2">
+<a href="#" class="nav-link">Contact</a>
+</li>
 
-<button class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#cartCanvas">
+<li class="nav-item ms-3">
+
+<button class="btn btn-primary cart-btn"
+data-bs-toggle="offcanvas"
+data-bs-target="#cartCanvas">
 
 <i class="fa fa-shopping-cart"></i>
 
-<span class="cart-count">
+<div class="cart-count">
 <?php echo count($_SESSION['cart']); ?>
-</span>
+</div>
 
 </button>
 
@@ -185,13 +364,14 @@ body{
 
 <div class="col-lg-6">
 
-<h1>Online Medical Store</h1>
+<h1>Your Trusted Online Pharmacy</h1>
 
-<p class="lead">
-Buy medicines and healthcare products online.
+<p>
+Order medicines, healthcare essentials,
+and medical equipment from home.
 </p>
 
-<button class="btn btn-light btn-lg mt-3">
+<button class="hero-btn mt-4">
 Shop Now
 </button>
 
@@ -200,7 +380,7 @@ Shop Now
 <div class="col-lg-6 text-center">
 
 <img src="https://images.unsplash.com/photo-1587854692152-cbe660dbde88?q=80&w=1000"
-class="img-fluid rounded shadow">
+class="img-fluid">
 
 </div>
 
@@ -220,32 +400,68 @@ Featured Products
 
 <div class="row g-4">
 
-<!-- Product 1 -->
+<?php
 
-<div class="col-md-4">
+$products = [
 
-<div class="product-card p-3">
+[
+"name"=>"Vitamin Tablets",
+"price"=>15,
+"img"=>"https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000"
+],
 
-<img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000"
-class="img-fluid product-img rounded">
+[
+"name"=>"Blood Pressure Kit",
+"price"=>35,
+"img"=>"https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?q=80&w=1000"
+],
 
-<h4 class="mt-3">
-Vitamin Tablets
+[
+"name"=>"Medical Mask Box",
+"price"=>10,
+"img"=>"https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=1000"
+]
+
+];
+
+foreach($products as $product){
+
+?>
+
+<div class="col-lg-4 col-md-6">
+
+<div class="product-card">
+
+<div class="badge-sale">
+Best Seller
+</div>
+
+<img src="<?php echo $product['img']; ?>"
+class="product-img">
+
+<div class="product-body">
+
+<h4 class="product-title">
+<?php echo $product['name']; ?>
 </h4>
 
 <p class="price">
-$15
+$<?php echo $product['price']; ?>
 </p>
 
 <form method="POST">
 
-<input type="hidden" name="name" value="Vitamin Tablets">
-<input type="hidden" name="price" value="15">
+<input type="hidden" name="name"
+value="<?php echo $product['name']; ?>">
 
-<button type="submit" name="add_to_cart"
-class="btn btn-primary w-100">
+<input type="hidden" name="price"
+value="<?php echo $product['price']; ?>">
 
-<i class="fa fa-cart-plus"></i>
+<button type="submit"
+name="add_to_cart"
+class="btn btn-primary w-100 add-btn">
+
+<i class="fa fa-cart-plus me-2"></i>
 Add To Cart
 
 </button>
@@ -256,77 +472,9 @@ Add To Cart
 
 </div>
 
-<!-- Product 2 -->
-
-<div class="col-md-4">
-
-<div class="product-card p-3">
-
-<img src="https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?q=80&w=1000"
-class="img-fluid product-img rounded">
-
-<h4 class="mt-3">
-Blood Pressure Kit
-</h4>
-
-<p class="price">
-$35
-</p>
-
-<form method="POST">
-
-<input type="hidden" name="name" value="Blood Pressure Kit">
-<input type="hidden" name="price" value="35">
-
-<button type="submit" name="add_to_cart"
-class="btn btn-primary w-100">
-
-<i class="fa fa-cart-plus"></i>
-Add To Cart
-
-</button>
-
-</form>
-
 </div>
 
-</div>
-
-<!-- Product 3 -->
-
-<div class="col-md-4">
-
-<div class="product-card p-3">
-
-<img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=1000"
-class="img-fluid product-img rounded">
-
-<h4 class="mt-3">
-Medical Mask Box
-</h4>
-
-<p class="price">
-$10
-</p>
-
-<form method="POST">
-
-<input type="hidden" name="name" value="Medical Mask Box">
-<input type="hidden" name="price" value="10">
-
-<button type="submit" name="add_to_cart"
-class="btn btn-primary w-100">
-
-<i class="fa fa-cart-plus"></i>
-Add To Cart
-
-</button>
-
-</form>
-
-</div>
-
-</div>
+<?php } ?>
 
 </div>
 
@@ -334,13 +482,16 @@ Add To Cart
 
 <!-- Cart -->
 
-<div class="offcanvas offcanvas-end" tabindex="-1" id="cartCanvas">
+<div class="offcanvas offcanvas-end"
+tabindex="-1"
+id="cartCanvas">
 
 <div class="offcanvas-header">
 
-<h4>Your Cart</h4>
+<h3>Your Cart</h3>
 
-<button class="btn-close" data-bs-dismiss="offcanvas"></button>
+<button class="btn-close"
+data-bs-dismiss="offcanvas"></button>
 
 </div>
 
@@ -348,45 +499,48 @@ Add To Cart
 
 <?php
 
-if (count($_SESSION['cart']) > 0) {
+if(count($_SESSION['cart']) > 0){
 
-    foreach ($_SESSION['cart'] as $item) {
+foreach($_SESSION['cart'] as $item){
 
-        $total += $item['price'];
+$total += $item['price'];
 
 ?>
 
-<div class="cart-box mb-3">
+<div class="cart-box">
 
 <h5>
 <?php echo $item['name']; ?>
 </h5>
 
-<p>
+<p class="mb-0">
 $<?php echo $item['price']; ?>
 </p>
 
 </div>
 
 <?php
-    }
+}
 
-} else {
+}else{
 
-    echo "<p>Your cart is empty.</p>";
+echo "<p>Your cart is empty.</p>";
+
 }
 
 ?>
 
-<hr>
+<div class="total-box">
 
 <h4>
 Total: $<?php echo $total; ?>
 </h4>
 
-<button class="btn btn-success w-100 mt-3">
-Checkout
+<button class="btn btn-light w-100 mt-3">
+Proceed To Checkout
 </button>
+
+</div>
 
 </div>
 
@@ -400,23 +554,26 @@ Checkout
 
 <h3>MediCare Pharmacy</h3>
 
-<p>
-Professional Online Pharmacy Store
+<p class="mt-3">
+Your trusted healthcare partner online.
 </p>
 
-<div class="mt-3">
+<div class="social-icons mt-4">
 
-<i class="fab fa-facebook fa-2x mx-2"></i>
-<i class="fab fa-instagram fa-2x mx-2"></i>
-<i class="fab fa-twitter fa-2x mx-2"></i>
+<i class="fab fa-facebook-f"></i>
+<i class="fab fa-instagram"></i>
+<i class="fab fa-twitter"></i>
+<i class="fab fa-linkedin-in"></i>
 
 </div>
+
+<p class="mt-4 mb-0">
+© 2026 MediCare Pharmacy. All Rights Reserved.
+</p>
 
 </div>
 
 </footer>
-
-<!-- Bootstrap JS -->
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
